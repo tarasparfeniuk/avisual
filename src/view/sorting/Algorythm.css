@@ -1,0 +1,24 @@
+@import '../AppTheme.css';
+
+.algorythm {
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--neutral-light);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 25px;
+}
+
+.algorythm .ms-CommandBar {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.algorythm .ms-Label {
+    align-self: center;
+}
+
+.algorythm > i {
+    align-self: center;
+}

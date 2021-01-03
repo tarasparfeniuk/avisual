@@ -1,0 +1,8 @@
+.array-settings-toolbar {
+    width: 94vw;
+    padding: 3vh 2vw;
+}
+
+.array-settings-toolbar .ms-Slider {
+    width: 250px;
+}

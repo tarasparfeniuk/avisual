@@ -1,0 +1,52 @@
+@import '../AppTheme.css';
+
+.array-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0px;
+}
+
+.array-container > .item {
+    min-width: 2px;
+    max-width: 20px;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.array-container > .item > div {
+    width: 100%;
+}
+
+.array-container > .item.item-positive.highlighted > div:first-child {
+    background-color: var(--theme-primary);
+}
+
+.array-container > .item.item-negative.highlighted > div:last-child {
+    background-color: var(--theme-primary);
+}
+
+.array-container > .item.item-positive > div:first-child {
+    background-color: var(--neutral-light);
+}
+
+.array-container > .item.item-negative > div:last-child {
+    background-color: var(--neutral-light);
+}
+
+.array-container > .item.item-positive > div:last-child {
+    background-color: transparent;
+}
+
+.array-container > .item.item-negative > div:first-child {
+    background-color: transparent;
+}
+
+.array-container > .item > div:first-child {
+    border-bottom: solid black 1px;
+}
+
+.array-container > .item > div:last-child {
+    border-top: 1px solid black;
+}
