@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/avisual/static/css/main.934a0f4a.chunk.css",
+    "main.js": "/avisual/static/js/main.c1dc9da5.chunk.js",
+    "main.js.map": "/avisual/static/js/main.c1dc9da5.chunk.js.map",
+    "runtime-main.js": "/avisual/static/js/runtime-main.738be41c.js",
+    "runtime-main.js.map": "/avisual/static/js/runtime-main.738be41c.js.map",
+    "static/js/2.03ea3215.chunk.js": "/avisual/static/js/2.03ea3215.chunk.js",
+    "static/js/2.03ea3215.chunk.js.map": "/avisual/static/js/2.03ea3215.chunk.js.map",
+    "static/js/3.0bdb175c.chunk.js": "/avisual/static/js/3.0bdb175c.chunk.js",
+    "static/js/3.0bdb175c.chunk.js.map": "/avisual/static/js/3.0bdb175c.chunk.js.map",
+    "index.html": "/avisual/index.html",
+    "static/css/main.934a0f4a.chunk.css.map": "/avisual/static/css/main.934a0f4a.chunk.css.map",
+    "static/js/2.03ea3215.chunk.js.LICENSE.txt": "/avisual/static/js/2.03ea3215.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.738be41c.js",
+    "static/js/2.03ea3215.chunk.js",
+    "static/css/main.934a0f4a.chunk.css",
+    "static/js/main.c1dc9da5.chunk.js"
+  ]
+}
