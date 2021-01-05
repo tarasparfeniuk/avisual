@@ -17,7 +17,7 @@ export class BubbleSort<T> implements ISortAlgorythm<T> {
 
     constructor(array: T[], compare: (a: T, b: T) => number) {
 
-        this._array = array;
+        this._array = [...array];
         this._compare = compare;
 
         this._isDone = false
