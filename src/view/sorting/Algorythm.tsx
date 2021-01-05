@@ -48,12 +48,16 @@ export const AlgorythmView = (props: AlgoViewProps) => {
         }
     ]
 
+    const operationsCountString = operationsCount > 0
+        ? `~${operationsCount}`
+        : operationsCount;
+
     return (
         <div className='algorythm'>
             <CommandBar items={items} farItems={farItems} />
             <Array array={array} selection={selection} />
             <ProgressIndicator progressHidden={!isRunning} />
-            <Label>Items: {array.length} | Operations: {operationsCount}</Label>
+            <Label>Items: {array.length} | Operations: {operationsCountString}</Label>
             {
                 isFinished && (
                     <Icon iconName='CheckMark' />
