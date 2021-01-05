@@ -2,6 +2,7 @@ import { CommandBar, ICommandBarItemProps } from "@fluentui/react";
 import React from "react";
 import { BubbleSort } from "../../model/sorting/bubble/BubbleSort";
 import { ISortAlgorythm } from "../../model/sorting/ISortAlgorythm";
+import { MergeSort } from "../../model/sorting/merge/MergeSort";
 import { AlgorythmView } from "./Algorythm";
 import { ArraySettings } from "./ArraySettings";
 import './Demo.css';
@@ -33,6 +34,7 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
 
         this.addAlgorythm = this.addAlgorythm.bind(this);
         this.addBubbleSort = this.addBubbleSort.bind(this);
+        this.addMergeSort = this.addMergeSort.bind(this);
         this.createArray = this.createArray.bind(this);
         this.executeStep = this.executeStep.bind(this);
         this.pause = this.pause.bind(this);
@@ -70,6 +72,11 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
                             key: 'bubbleSort',
                             text: 'bubble sort',
                             onClick: this.addBubbleSort
+                        },
+                        {
+                            key: 'mergeSort',
+                            text: 'merge sort',
+                            onClick: this.addMergeSort
                         }
                     ],
                 },
@@ -230,6 +237,15 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
         const { sourceArray = [] } = this.state;
 
         const algo = new BubbleSort<number>(sourceArray, (a, b) => a - b);
+        
+        this.addAlgorythm(algo)
+    }
+
+    private addMergeSort(): void {
+
+        const { sourceArray = [] } = this.state;
+
+        const algo = new MergeSort<number>(sourceArray, (a, b) => a - b);
         
         this.addAlgorythm(algo)
     }
