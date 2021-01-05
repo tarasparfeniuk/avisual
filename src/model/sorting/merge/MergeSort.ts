@@ -88,9 +88,12 @@ export class MergeSort<T> implements ISortAlgorythm<T> {
 
         const selection: number[] = [];
 
-        for (let i = this._left; i <= this._right; i++) {
+        if (!this._isDone && this._currentOperationNumber > 0) {
 
-            selection.push(i);
+            for (let i = this._left; i <= this._right; i++) {
+
+                selection.push(i);
+            }
         }
 
         return selection;

@@ -64,7 +64,9 @@ export class BubbleSort<T> implements ISortAlgorythm<T> {
 
     public get currentSelection(): number[] {
 
-        return [ this._j, this._j + 1 ];
+        return this._isDone || this._currentOperationNumber === 0
+            ? [] 
+            : [ this._j, this._j + 1 ];
     }
 
     public executeStep(): void {
