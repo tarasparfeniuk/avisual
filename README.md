@@ -1,5 +1,8 @@
-# Getting Started with Create React App
+# AVisual - algorythms visualisation built with React and TypeSctipt
 
+Demo: https://taras-parfeniuk.github.io/avisual/
+
+-------------------
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
