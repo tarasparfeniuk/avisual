@@ -35,7 +35,6 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
         this.addAlgorythm = this.addAlgorythm.bind(this);
         this.addBubbleSort = this.addBubbleSort.bind(this);
         this.addMergeSort = this.addMergeSort.bind(this);
-        this.createArray = this.createArray.bind(this);
         this.executeStep = this.executeStep.bind(this);
         this.pause = this.pause.bind(this);
         this.play = this.play.bind(this);
@@ -45,8 +44,6 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
     }
 
     componentDidMount() {
-
-        this.updateSourceArray(DEFAULT_ARRAY_SIZE);
 
         this._stepTimerId = setInterval(this.executeStep, STEP_INTERVAL);
     }
@@ -153,11 +150,8 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
 
         if (demoState === "STOPPED") {
 
-            const newArray = this.createArray(sourceArray.length);
-
             const stateUpdate: SortingDemoViewState = { 
-                demoState: "PLAYING", 
-                sourceArray: newArray,
+                demoState: "PLAYING",
                 algorythms: algorythms.map(i => i.copyWithArray(sourceArray)),
             };
 
@@ -215,16 +209,14 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
         this.setState(stateUpdate);
     }
 
-    private updateSourceArray(size: number) {
+    private updateSourceArray(newArray: number[]) {
 
         if (this.canUpdateSourceArray) {
             
             const { algorythms = [] } = this.state;
 
-            const newArray = this.createArray(size);
-
             const stateUpdate: SortingDemoViewState = {
-                sourceArray: this.createArray(size),
+                sourceArray: newArray,
                 algorythms: algorythms.map(i => i.copyWithArray(newArray))
             }
     
@@ -275,21 +267,5 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
 
             this.setState({ algorythms })
         }
-    }
-
-    private createArray(size: number): number[] {
-
-        const array = [];
-
-        for (let i = 0; i < size; i++) {
-
-            const min = -10;
-            const max = 10;
-            const val = Math.floor(Math.random() * (max - min + 1)) + min;
-
-            array.push(val);
-        }
-
-        return array;
     }
 }

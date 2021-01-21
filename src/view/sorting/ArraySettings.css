@@ -1,8 +1,23 @@
 .array-settings-toolbar {
     width: 94vw;
-    padding: 3vh 2vw;
+    padding: 3vh 24px;
+    display: flex;
 }
 
 .array-settings-toolbar .ms-Slider {
     width: 250px;
 }
+
+.array-settings-toolbar > .array-container {
+    height: 4vh; 
+    max-width: 40vw;
+}
+
+.array-settings-toolbar > .array-container > .item.item-positive > div:first-child {
+    background-color: var(--theme-primary);
+}
+
+.array-settings-toolbar > .array-container > .item.item-negative > div:last-child {
+    background-color: var(--theme-primary);
+}
+

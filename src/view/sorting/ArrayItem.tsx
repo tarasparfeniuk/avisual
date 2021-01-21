@@ -20,9 +20,9 @@ export const ArrayItem = ({ height = 100, isHighlighted = false, isNegative = fa
     }
 
     return (
-        <div className={classNames.join(' ')}>
-            <div style={{ height: height }} />
-            <div style={{ height: height }} />
+        <div className={classNames.join(' ')} style={{ height: `${height}%` }}>
+            <div />
+            <div />
         </div>
     );
 }

@@ -8,6 +8,11 @@
     flex-direction: column;
     justify-content: center;
     padding: 25px;
+    min-height: 35vh;
+}
+
+.algorythm > .array-container {
+    height: 50%;
 }
 
 .algorythm .ms-CommandBar {

@@ -9,7 +9,7 @@
 }
 
 .array-container > .item {
-    min-width: 2px;
+    min-width: 1px;
     max-width: 20px;
     margin: 0;
     flex-grow: 1;
@@ -17,6 +17,7 @@
 
 .array-container > .item > div {
     width: 100%;
+    height: 50%;
 }
 
 .array-container > .item.item-positive.highlighted > div:first-child {

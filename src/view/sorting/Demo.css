@@ -10,5 +10,6 @@
 }
 
 .algorythms-container > .algorythm {
-    min-width: 40vw;
+    min-width: 24vw;
+    max-width: 40vw;
 }
