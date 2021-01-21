@@ -40,7 +40,7 @@ export class ArraySettings extends React.Component<ArraySettingsProps, ArraySett
             <div className='array-settings-toolbar'>
                 <Slider 
                     showValue 
-                    label='Size' 
+                    label='Array size' 
                     min={2} 
                     max={250} 
                     defaultValue={defaultArraySize} 
