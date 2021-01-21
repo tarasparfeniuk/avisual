@@ -1,3 +1,7 @@
+.demo-view {
+    width: 100%;
+}
+
 .algorythms-container {
     display: flex;
     flex-direction: row;
@@ -12,4 +16,23 @@
 .algorythms-container > .algorythm {
     min-width: 24vw;
     max-width: 40vw;
+}
+
+.demo-settings-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 3vh 24px;
+}
+
+.demo-settings-toolbar > div {
+    margin-right: 20px;
+}
+
+.demo-settings-toolbar .ms-Slider {
+    width: 23vw;
+}
+
+.demo-settings-toolbar .ms-CommanBar {
+    width: 23vw;
 }
