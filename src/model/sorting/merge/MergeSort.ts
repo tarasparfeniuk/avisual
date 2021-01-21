@@ -1,59 +1,63 @@
-import { AlgorythmInfo } from '../../AlgorythmInfo';
-import { ISortAlgorythm } from '../ISortAlgorythm';
+import { AlgorythmInfo } from "../../AlgorythmInfo";
+import { AlgorythmState, AlgorythmStateMachine } from "../../AlgorythmSM";
+import { ISortAlgorythm } from "../ISortAlgorythm";
 
-type MergeSortContext = { left: number, right: number, middle: number, nextStep: MergeSortStep };
-type MergeSortStep = () => void;
+type MergeSortState<T> = AlgorythmState<MergeSortContext<T>>;
+
+type MergeSortContext<T> = {
+    left: number, 
+    right: number, 
+    middle: number,
+    leftSubArray: T[],
+    rightSubArray: T[],
+    leftMergeIdx: number,
+    rightMergeIdx: number,
+    mergeIdx: number
+};
 
 export class MergeSort<T> implements ISortAlgorythm<T> {
 
-    private readonly _contextStack: MergeSortContext[];
-
     private readonly _array: T[];
     private readonly _compare: (a: T, b: T) => number;
-
-    private _nextStep: MergeSortStep;
-    private _isDone: boolean;
-
-    private _middle: number;
-    private _right: number;
-    private _left: number;
-
-    private _leftSubArray: T[];
-    private _rightSubArray: T[];
-
-    private _leftMergeIdx: number;
-    private _rightMergeIdx: number;
-    private _mergeIdx: number;
-
-    private _currentOperationNumber: number;
+    private readonly _sm: AlgorythmStateMachine<MergeSortContext<T>>;
 
     constructor(array: T[], compare: (a: T, b: T) => number) {
-
+        
         this._array = [...array];
         this._compare = compare;
 
-        this._isDone = false
+        this.setArrayMiddle = this.setArrayMiddle.bind(this);
+        this.mergeSortLeft = this.mergeSortLeft.bind(this);
+        this.mergeSortRight = this.mergeSortRight.bind(this);
+        this.merge = this.merge.bind(this);
+        this.mergeNextElement = this.mergeNextElement.bind(this);
 
-        this._middle = -1;
-        this._left = 0;
-        this._right = array.length - 1;
+        const initialState: MergeSortState<T> = {
+            context: {
+                left: 0,
+                right: array.length - 1,
+                leftMergeIdx: -1,
+                rightMergeIdx: -1,
+                leftSubArray: [],
+                rightSubArray: [],
+                mergeIdx: -1,
+                middle: -1
+            },
+            isFinished: false,
+            transition: this.setArrayMiddle
+        }
 
-        this._currentOperationNumber = 0;
-        this._nextStep = this.setArrayMiddle;
+        this._sm = new AlgorythmStateMachine(initialState);
+    }
 
-        this._mergeIdx = -1;
-        this._leftMergeIdx = -1;
-        this._rightMergeIdx = -1;
+    public get currentState(): MergeSortState<T> {
 
-        this._leftSubArray = [];
-        this._rightSubArray = [];
-
-        this._contextStack = [];
+        return this._sm.currentState;
     }
 
     public get currentOperationNumber(): number {
 
-        return this._currentOperationNumber;
+        return this._sm.operationNumber;
     }
 
     public get info(): AlgorythmInfo {
@@ -69,41 +73,38 @@ export class MergeSort<T> implements ISortAlgorythm<T> {
         return this._array;
     }
 
+    public executeStep(): void {
+
+        this._sm.executeStep();
+    }
+
     public sort(): T[] {
 
-        while (!this._isDone) {
+        while (!this.currentState.isFinished) {
 
             this.executeStep();
         }
 
-        return this._array;
+        return this.array;
     }
 
     public get isFinished(): boolean {
 
-        return this._isDone;
+        return this.currentState.isFinished;
     }
 
     public get currentSelection(): number[] {
 
+        const { left, right } = this.currentState.context;
+
         const selection: number[] = [];
 
-        if (!this._isDone && this._currentOperationNumber > 0) {
+        for (let i = left; i <= right; i++) {
 
-            for (let i = this._left; i <= this._right; i++) {
-
-                selection.push(i);
-            }
+            selection.push(i);
         }
 
         return selection;
-    }
-
-    public executeStep(): void {
-        
-        this._nextStep();
-
-        this._currentOperationNumber++;
     }
 
     public copyWithArray(array: T[]): ISortAlgorythm<T> {
@@ -111,139 +112,166 @@ export class MergeSort<T> implements ISortAlgorythm<T> {
         return new MergeSort<T>(array, this._compare);
     }
 
-    private setArrayMiddle(): void {
+    private setArrayMiddle(state: MergeSortState<T>): MergeSortState<T>[] {
 
-        this._middle = Math.floor((this._right + this._left) / 2);
+        const { left, right } = state.context;
 
-        this._nextStep = this.mergeSortLeft;
+        const middle = Math.floor((right + left) / 2);
+
+        const nextState: MergeSortState<T> = {
+            ...state,
+            context: {
+                ...state.context,
+                middle
+            },
+            transition: this.mergeSortLeft
+        };
+
+        return [ nextState ];
     }
 
-    private mergeSortLeft(): void {
+    private mergeSortLeft(state: MergeSortState<T>): MergeSortState<T>[] {
 
-        this._nextStep = this.mergeSortRight;
-        
-        if (this._right <= this._left) {
+        const { left, right, middle } = state.context;
 
-            this.restoreContext();
+        if (right <= left) {
 
-            return;
+            return [];
         }
 
-        this.saveContext();
+        const stateToSave: MergeSortState<T> = {
+            ...state,
+            transition: this.mergeSortRight
+        } ;
 
-        this._right = this._middle;
+        const nextState: MergeSortState<T> = {
+            ...state,
+            context: {
+                ...state.context,
+                right: middle
+            },
+            transition: this.setArrayMiddle
+        };
 
-        this._nextStep = this.setArrayMiddle;
+        return [ stateToSave, nextState ];
     }
 
-    private mergeSortRight(): void {
+    private mergeSortRight(state: MergeSortState<T>): MergeSortState<T>[] {
        
-        if (this._right <= this._left) {
+        const { left, right, middle } = state.context;
 
-            this.restoreContext();
-            
-            return;
+        if (right <= left) {
+
+            return [];
         }
 
-        this._nextStep = this.merge;
+        const stateToSave: MergeSortState<T> = {
+            ...state,
+            transition: this.merge
+        } ;
 
-        this.saveContext();
+        const nextState: MergeSortState<T> = {
+            ...state,
+            context: {
+                ...state.context,
+                left: middle + 1
+            },
+            transition: this.setArrayMiddle
+        };
 
-        this._left = this._middle + 1;
-
-        this._nextStep = this.setArrayMiddle;
+        return [ stateToSave, nextState ];
     }
 
-    private saveContext(): void {
+    private merge(state: MergeSortState<T>): MergeSortState<T>[] {
 
-        this._contextStack.push({ 
-            left: this._left, 
-            right: this._right, 
-            middle: this._middle, 
-            nextStep: this._nextStep 
-        });
-    }
-
-    private restoreContext(): void {
-
-        const context = this._contextStack.pop();
-
-        if (!context) {
-
-            return;
-        }
-
-        this._left = context?.left;
-        this._right = context?.right;
-        this._middle = context?.middle;
-        this._nextStep = context.nextStep;
-    }
-
-    private merge(): void {
-
-        this._leftSubArray = this._array.slice(this._left, this._middle + 1);
-        this._rightSubArray = this._array.slice(this._middle + 1, this._right + 1);
+        const { left, right, middle } = state.context;
         
-        this._leftMergeIdx = 0;
-        this._rightMergeIdx = 0;
-        this._mergeIdx = this._left;
+        const nextState: MergeSortState<T> = {
+            ...state,
+            context: {
+                ...state.context,
+                leftSubArray: this._array.slice(left, middle + 1),
+                rightSubArray: this._array.slice(middle + 1, right + 1),
+                leftMergeIdx: 0,
+                rightMergeIdx: 0,
+                mergeIdx: left,
+            },
+            transition: this.mergeNextElement
+        };
         
-        this._nextStep = this.mergeNextElement;
+        return [ nextState ];
     }
 
-    private mergeNextElement(): void {
+    private mergeNextElement(state: MergeSortState<T>): MergeSortState<T>[] {
 
-        if (this._leftMergeIdx < this._leftSubArray.length && this._rightMergeIdx < this._rightSubArray.length) {
+        const { 
+            left, 
+            right,
+            leftMergeIdx = -1, 
+            leftSubArray = [],
+            rightMergeIdx = -1, 
+            rightSubArray = [], 
+            mergeIdx = -1 
+        } = state.context;
+
+        const nextState: MergeSortState<T> = {
+            ...state,
+            context: {
+                ...state.context
+            }
+        };
+
+        if (leftMergeIdx < leftSubArray.length && rightMergeIdx < rightSubArray.length) {
             
-            if (this._leftSubArray[this._leftMergeIdx] <= this._rightSubArray[this._rightMergeIdx]) {
+            if (this._compare(leftSubArray[leftMergeIdx], rightSubArray[rightMergeIdx]) <= 0) {
                 
-                this._array[this._mergeIdx] = this._leftSubArray[this._leftMergeIdx];
-                this._leftMergeIdx++;
+                this._array[mergeIdx] = leftSubArray[leftMergeIdx];
+                nextState.context.leftMergeIdx = leftMergeIdx + 1;
             }
             else {
 
-                this._array[this._mergeIdx] = this._rightSubArray[this._rightMergeIdx];
-                this._rightMergeIdx++;
+                this._array[mergeIdx] = rightSubArray[rightMergeIdx];
+                nextState.context.rightMergeIdx = rightMergeIdx + 1;
             }
 
-            this._mergeIdx++;
+            nextState.context.mergeIdx = mergeIdx + 1;
 
-            this._nextStep = this.mergeNextElement;
+            nextState.transition = this.mergeNextElement;
 
-            return;
+            return [ nextState ];
         }
 
-        if (this._leftMergeIdx < this._leftSubArray.length) {
+        if (leftMergeIdx < leftSubArray.length) {
 
-            this._array[this._mergeIdx] = this._leftSubArray[this._leftMergeIdx];
+            this._array[mergeIdx] = leftSubArray[leftMergeIdx];
 
-            this._leftMergeIdx++;
-            this._mergeIdx++;
+            nextState.context.leftMergeIdx = leftMergeIdx + 1;
+            nextState.context.mergeIdx = mergeIdx + 1;
 
-            this._nextStep = this.mergeNextElement;
+            nextState.transition = this.mergeNextElement;
 
-            return;
+            return [ nextState ];
         }
 
-        if (this._rightMergeIdx < this._rightSubArray.length) {
+        if (rightMergeIdx < rightSubArray.length) {
 
-            this._array[this._mergeIdx] = this._rightSubArray[this._rightMergeIdx];
+            this._array[mergeIdx] = rightSubArray[rightMergeIdx];
 
-            this._rightMergeIdx++;
-            this._mergeIdx++;
+            nextState.context.rightMergeIdx = leftMergeIdx + 1;
+            nextState.context.mergeIdx = mergeIdx + 1;
 
-            this._nextStep = this.mergeNextElement;
+            nextState.transition = this.mergeNextElement;
 
-            return;
+            return [ nextState ];
         }
 
-        if (this._left === 0 && this._right === this._array.length - 1) {
+        if (left === 0 && right === this._array.length - 1) {
 
-            this._isDone = true;
+            nextState.isFinished = true;
 
-            return;
+            return [ nextState ];
         }
 
-        this.restoreContext();
+        return [ ];
     }
 }
