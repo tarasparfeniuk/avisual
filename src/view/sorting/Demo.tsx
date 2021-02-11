@@ -1,8 +1,9 @@
-import { CommandBar, CommandBarButton, CommandButton, ICommandBarItemProps, Slider } from "@fluentui/react";
+import { CommandBar, CommandBarButton, ICommandBarItemProps, Slider } from "@fluentui/react";
 import React from "react";
 import { BubbleSort } from "../../model/sorting/bubble/BubbleSort";
 import { ISortAlgorythm } from "../../model/sorting/ISortAlgorythm";
 import { MergeSort } from "../../model/sorting/merge/MergeSort";
+import { QuickSort } from "../../model/sorting/quick/QuickSort";
 import { AlgorythmView } from "./Algorythm";
 import { ArraySettings } from "./ArraySettings";
 import './Demo.css';
@@ -36,6 +37,7 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
         this.addAlgorythm = this.addAlgorythm.bind(this);
         this.addBubbleSort = this.addBubbleSort.bind(this);
         this.addMergeSort = this.addMergeSort.bind(this);
+        this.addQuickSort = this.addQuickSort.bind(this);
         this.executeStep = this.executeStep.bind(this);
         this.pause = this.pause.bind(this);
         this.play = this.play.bind(this);
@@ -70,6 +72,11 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
                     key: 'mergeSort',
                     text: 'merge sort',
                     onClick: this.addMergeSort
+                },
+                {
+                    key: 'quickSort',
+                    text: 'quick sort',
+                    onClick: this.addQuickSort
                 }
             ],
         };
@@ -256,6 +263,15 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
         const { sourceArray = [] } = this.state;
 
         const algo = new MergeSort<number>(sourceArray, (a, b) => a - b);
+        
+        this.addAlgorythm(algo)
+    }
+
+    private addQuickSort(): void {
+
+        const { sourceArray = [] } = this.state;
+
+        const algo = new QuickSort<number>(sourceArray, (a, b) => a - b);
         
         this.addAlgorythm(algo)
     }
