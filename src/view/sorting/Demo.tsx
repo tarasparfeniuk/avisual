@@ -1,9 +1,12 @@
 import { CommandBar, CommandBarButton, ICommandBarItemProps, Slider } from "@fluentui/react";
 import React from "react";
 import { BubbleSort } from "../../model/sorting/bubble/BubbleSort";
-import { ISortAlgorythm } from "../../model/sorting/ISortAlgorythm";
+import { BubbleSortAlgorythmFactory } from "../../model/sorting/bubble/BubbleSortAlgorythmFactory";
+import { ISortAlgorythm, ISortAlgorythmFactory } from "../../model/sorting/ISortAlgorythm";
 import { MergeSort } from "../../model/sorting/merge/MergeSort";
+import { MergeSortAlgorythmFactory } from "../../model/sorting/merge/MergeSortAlgorythmFactory";
 import { QuickSort } from "../../model/sorting/quick/QuickSort";
+import { QuickSortAlgorythmFactory } from "../../model/sorting/quick/QuickSortAlgorythmFactory";
 import { AlgorythmView } from "./Algorythm";
 import { ArraySettings } from "./ArraySettings";
 import './Demo.css';
@@ -22,6 +25,8 @@ type SortingDemoViewState = {
 
 export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
 
+    private readonly _availableAlgorythms: ISortAlgorythmFactory<number>[];
+
     private _stepTimerId: any;
 
     constructor(props: {}) {
@@ -35,9 +40,6 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
         };
 
         this.addAlgorythm = this.addAlgorythm.bind(this);
-        this.addBubbleSort = this.addBubbleSort.bind(this);
-        this.addMergeSort = this.addMergeSort.bind(this);
-        this.addQuickSort = this.addQuickSort.bind(this);
         this.executeStep = this.executeStep.bind(this);
         this.pause = this.pause.bind(this);
         this.play = this.play.bind(this);
@@ -45,6 +47,12 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
         this.removeAlgorythm = this.removeAlgorythm.bind(this);
         this.updateSourceArray = this.updateSourceArray.bind(this);
         this.changeDemoSpeed = this.changeDemoSpeed.bind(this);
+
+        this._availableAlgorythms = [
+            new BubbleSortAlgorythmFactory((a, b) => a - b),
+            new MergeSortAlgorythmFactory((a, b) => a - b),
+            new QuickSortAlgorythmFactory((a, b) => a - b)
+        ];
     }
 
     componentDidMount() {
@@ -59,26 +67,14 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
 
     render() {
 
-        const { demoState, algorythms = [] } = this.state;
+        const { demoState, algorythms = [], sourceArray = [] } = this.state;
 
         const addAlgorythmMenuProps = {
-            items: [
-                {
-                    key: 'bubbleSort',
-                    text: 'bubble sort',
-                    onClick: this.addBubbleSort
-                },
-                {
-                    key: 'mergeSort',
-                    text: 'merge sort',
-                    onClick: this.addMergeSort
-                },
-                {
-                    key: 'quickSort',
-                    text: 'quick sort',
-                    onClick: this.addQuickSort
-                }
-            ],
+            items: this._availableAlgorythms.map(i => ({
+                key: `add-algo_${i.algorythmName}`,
+                text: i.algorythmName,
+                onClick: () => this.addAlgorythm(i.create(sourceArray))
+            }))
         };
 
         const demoControls: ICommandBarItemProps[] = [
@@ -247,33 +243,6 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
         clearInterval(this._stepTimerId);
 
         this._stepTimerId = setInterval(this.executeStep, STEP_INTERVAL / newSpeed);
-    }
-
-    private addBubbleSort(): void {
-
-        const { sourceArray = [] } = this.state;
-
-        const algo = new BubbleSort<number>(sourceArray, (a, b) => a - b);
-        
-        this.addAlgorythm(algo)
-    }
-
-    private addMergeSort(): void {
-
-        const { sourceArray = [] } = this.state;
-
-        const algo = new MergeSort<number>(sourceArray, (a, b) => a - b);
-        
-        this.addAlgorythm(algo)
-    }
-
-    private addQuickSort(): void {
-
-        const { sourceArray = [] } = this.state;
-
-        const algo = new QuickSort<number>(sourceArray, (a, b) => a - b);
-        
-        this.addAlgorythm(algo)
     }
 
     private executeStep(): void {
