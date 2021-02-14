@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/avisual/static/css/main.12426b10.chunk.css",
-    "main.js": "/avisual/static/js/main.6f44485d.chunk.js",
-    "main.js.map": "/avisual/static/js/main.6f44485d.chunk.js.map",
-    "runtime-main.js": "/avisual/static/js/runtime-main.e68d326c.js",
-    "runtime-main.js.map": "/avisual/static/js/runtime-main.e68d326c.js.map",
-    "static/js/2.b169f3d3.chunk.js": "/avisual/static/js/2.b169f3d3.chunk.js",
-    "static/js/2.b169f3d3.chunk.js.map": "/avisual/static/js/2.b169f3d3.chunk.js.map",
-    "static/js/3.63e32820.chunk.js": "/avisual/static/js/3.63e32820.chunk.js",
-    "static/js/3.63e32820.chunk.js.map": "/avisual/static/js/3.63e32820.chunk.js.map",
+    "main.js": "/avisual/static/js/main.1d12670f.chunk.js",
+    "main.js.map": "/avisual/static/js/main.1d12670f.chunk.js.map",
+    "runtime-main.js": "/avisual/static/js/runtime-main.7de46e86.js",
+    "runtime-main.js.map": "/avisual/static/js/runtime-main.7de46e86.js.map",
+    "static/js/2.e9aad5ba.chunk.js": "/avisual/static/js/2.e9aad5ba.chunk.js",
+    "static/js/2.e9aad5ba.chunk.js.map": "/avisual/static/js/2.e9aad5ba.chunk.js.map",
+    "static/js/3.a728eaac.chunk.js": "/avisual/static/js/3.a728eaac.chunk.js",
+    "static/js/3.a728eaac.chunk.js.map": "/avisual/static/js/3.a728eaac.chunk.js.map",
     "index.html": "/avisual/index.html",
     "static/css/main.12426b10.chunk.css.map": "/avisual/static/css/main.12426b10.chunk.css.map",
-    "static/js/2.b169f3d3.chunk.js.LICENSE.txt": "/avisual/static/js/2.b169f3d3.chunk.js.LICENSE.txt"
+    "static/js/2.e9aad5ba.chunk.js.LICENSE.txt": "/avisual/static/js/2.e9aad5ba.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.e68d326c.js",
-    "static/js/2.b169f3d3.chunk.js",
+    "static/js/runtime-main.7de46e86.js",
+    "static/js/2.e9aad5ba.chunk.js",
     "static/css/main.12426b10.chunk.css",
-    "static/js/main.6f44485d.chunk.js"
+    "static/js/main.1d12670f.chunk.js"
   ]
 }
