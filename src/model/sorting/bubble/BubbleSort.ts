@@ -1,143 +1,45 @@
-import { AlgorythmInfo } from '../../AlgorythmInfo';
 import { ISortAlgorythm } from '../ISortAlgorythm';
-import { AlgorythmState, AlgorythmStateMachine } from '../../AlgorythmSM';
+import { EventBasedSortAlgorythm } from '../EventBasedSortAlgorythm';
 
-type BubbleSortState = AlgorythmState<BubbleSortContext>;
-
-type BubbleSortContext = {
-    i: number;
-    j: number;
-}
-
-export class BubbleSort<T> implements ISortAlgorythm<T> {
-
-    private readonly _array: T[];
-    private readonly _compare: (a: T, b: T) => number;
-    private readonly _sm: AlgorythmStateMachine<BubbleSortContext>;
+export class BubbleSort<T> extends EventBasedSortAlgorythm<T> implements ISortAlgorythm<T> {
 
     constructor(array: T[], compare: (a: T, b: T) => number) {
 
-        this._array = [...array];
-        this._compare = compare;
-
-        this.incrementIndexes = this.incrementIndexes.bind(this)
-        this.swapElements = this.swapElements.bind(this)
-
-        const initialState: BubbleSortState = {
-            context: {
-                i: 0,
-                j: -1
-            },
-            isFinished: false,
-            transition: this.incrementIndexes
-        };
-
-        this._sm = new AlgorythmStateMachine<BubbleSortContext>(initialState);
+         super(array, compare, { name: "bubble sort", link: "https://en.wikipedia.org/wiki/Bubble_sort" });
     }
 
-    public get currentOperationNumber(): number {
-
-        return this._sm.operationNumber;
+    protected algorythm(): Promise<void> {
+        
+        return this.bubbleSort();
     }
 
-    public get info(): AlgorythmInfo {
+    private async bubbleSort(): Promise<void> {
 
-        return {
-            name: "bubble sort",
-            link: "https://en.wikipedia.org/wiki/Bubble_sort"
-        };
-    }
+        if (this._array.length < 2) {
 
-    public get array(): T[] {
-
-        return this._array;
-    }
-    
-    public get currentState(): BubbleSortState {
-
-        return this._sm.currentState;
-    }
-
-    public sort(): T[] {
-
-        while (!this.isFinished) {
-
-            this.executeStep();
+            return;
         }
 
-        return this._array;
-    }
+        for (let i = this._array.length; i >= 0; i--) {
 
-    public get isFinished(): boolean {
+            for (let j = 1; j < i; j++) {
 
-        return this._sm.currentState.isFinished;
-    }
+                this.setSelection([ j, j - 1 ]);
 
-    public get currentSelection(): number[] {
+                await this.waitForNextStep();
 
-        const { j } = this.currentState.context;
+                if (this._compare(this._array[j - 1], this._array[j]) > 0) {
 
-        return this.isFinished || this.currentOperationNumber === 0
-            ? [] 
-            : [ j, j + 1 ];
-    }
+                    await this.waitForNextStep();
 
-    public executeStep(): void {
-
-        this._sm.executeStep();
+                    [ this._array[j - 1], this._array[j] ] = [ this._array[j], this._array[j - 1] ];
+                }
+            }
+        }
     }
 
     public copyWithArray(array: T[]): ISortAlgorythm<T> {
 
         return new BubbleSort<T>(array, this._compare);
-    }
-
-    private incrementIndexes(state: BubbleSortState): BubbleSortState[]  {
-
-        const { i, j } = state.context;
-
-        const nextState: BubbleSortState = { 
-            ...state,
-            context: {
-                ...state.context, j: j + 1 
-            },
-            transition: this.swapElements
-        };
-
-        if (nextState.context.j === this._array.length - i - 1) {
-
-            nextState.context.i = i + 1;
-            nextState.context.j = 0;
-        }
-
-        if (nextState.context.i === this._array.length - 1) {
-
-            nextState.isFinished = true;
-        }
-
-        return [ nextState ];
-    } 
-
-    private swapElements(state: BubbleSortState): BubbleSortState[] {
-
-        const { j } = state.context;
-
-        const a = this._array[j];
-        const b = this._array[j + 1];
-
-        const needSort = this._compare(a, b) > 0;
-
-        if (needSort) {
-
-            this._array[j] = b;
-            this._array[j + 1] = a;
-        }
-
-        const nextState: BubbleSortState = {
-            ...state,
-            transition: this.incrementIndexes
-        }
-
-        return [ nextState ];
     }
 }
