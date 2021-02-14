@@ -34,10 +34,7 @@ export abstract class EventBasedSortAlgorythm<T> implements ISortAlgorythm<T> {
 
     public get info(): AlgorythmInfo {
 
-        return {
-            name: "quick sort",
-            link: "https://en.wikipedia.org/wiki/Quick_sort"
-        };
+        return this._info;
     }
 
     public get array(): T[] {
