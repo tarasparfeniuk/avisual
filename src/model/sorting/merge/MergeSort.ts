@@ -9,7 +9,7 @@ export class MergeSort<T> extends EventBasedSortAlgorythm<T> implements ISortAlg
     }
 
     public copyWithArray(array: T[]): ISortAlgorythm<T> {
-
+        
         return new MergeSort<T>(array, this._compare);
     }
 
@@ -68,7 +68,7 @@ export class MergeSort<T> extends EventBasedSortAlgorythm<T> implements ISortAlg
             await this.waitForNextStep();
             const item = this.pickItem(leftArray, rightArray);
                 
-            if (!!item) {
+            if (item != undefined) {
 
                 this._array[i] = item;
             }
