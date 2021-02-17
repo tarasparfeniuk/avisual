@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/avisual/static/css/main.12426b10.chunk.css",
-    "main.js": "/avisual/static/js/main.1f1dadb8.chunk.js",
-    "main.js.map": "/avisual/static/js/main.1f1dadb8.chunk.js.map",
+    "main.css": "/avisual/static/css/main.a57bae35.chunk.css",
+    "main.js": "/avisual/static/js/main.bc0b3fd6.chunk.js",
+    "main.js.map": "/avisual/static/js/main.bc0b3fd6.chunk.js.map",
     "runtime-main.js": "/avisual/static/js/runtime-main.7de46e86.js",
     "runtime-main.js.map": "/avisual/static/js/runtime-main.7de46e86.js.map",
     "static/js/2.e9aad5ba.chunk.js": "/avisual/static/js/2.e9aad5ba.chunk.js",
@@ -10,13 +10,13 @@
     "static/js/3.a728eaac.chunk.js": "/avisual/static/js/3.a728eaac.chunk.js",
     "static/js/3.a728eaac.chunk.js.map": "/avisual/static/js/3.a728eaac.chunk.js.map",
     "index.html": "/avisual/index.html",
-    "static/css/main.12426b10.chunk.css.map": "/avisual/static/css/main.12426b10.chunk.css.map",
+    "static/css/main.a57bae35.chunk.css.map": "/avisual/static/css/main.a57bae35.chunk.css.map",
     "static/js/2.e9aad5ba.chunk.js.LICENSE.txt": "/avisual/static/js/2.e9aad5ba.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.7de46e86.js",
     "static/js/2.e9aad5ba.chunk.js",
-    "static/css/main.12426b10.chunk.css",
-    "static/js/main.1f1dadb8.chunk.js"
+    "static/css/main.a57bae35.chunk.css",
+    "static/js/main.bc0b3fd6.chunk.js"
   ]
 }
