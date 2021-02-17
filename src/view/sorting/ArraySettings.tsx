@@ -1,4 +1,4 @@
-import { CommandBar, CommandBarButton, ICommandBarItemProps, Label, Slider } from "@fluentui/react";
+import { CommandBarButton, Slider } from "@fluentui/react";
 import React from "react";
 import './ArraySettings.css';
 import { Array } from "./Array";

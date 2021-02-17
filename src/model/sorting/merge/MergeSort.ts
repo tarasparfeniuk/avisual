@@ -68,7 +68,7 @@ export class MergeSort<T> extends EventBasedSortAlgorythm<T> implements ISortAlg
             await this.waitForNextStep();
             const item = this.pickItem(leftArray, rightArray);
                 
-            if (item != undefined) {
+            if (item !== undefined) {
 
                 this._array[i] = item;
             }

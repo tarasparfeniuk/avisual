@@ -1,11 +1,8 @@
 import { CommandBar, CommandBarButton, ICommandBarItemProps, Slider } from "@fluentui/react";
 import React from "react";
-import { BubbleSort } from "../../model/sorting/bubble/BubbleSort";
 import { BubbleSortAlgorythmFactory } from "../../model/sorting/bubble/BubbleSortAlgorythmFactory";
 import { ISortAlgorythm, ISortAlgorythmFactory } from "../../model/sorting/ISortAlgorythm";
-import { MergeSort } from "../../model/sorting/merge/MergeSort";
 import { MergeSortAlgorythmFactory } from "../../model/sorting/merge/MergeSortAlgorythmFactory";
-import { QuickSort } from "../../model/sorting/quick/QuickSort";
 import { QuickSortAlgorythmFactory } from "../../model/sorting/quick/QuickSortAlgorythmFactory";
 import { AlgorythmView } from "./Algorythm";
 import { ArraySettings } from "./ArraySettings";
