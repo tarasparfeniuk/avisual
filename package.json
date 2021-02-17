@@ -16,8 +16,7 @@
     "test-react": "react-scripts test",
     "eject": "react-scripts eject",
     "test": "mocha -r ts-node/register 'test/**/*.ts'",
-    "predeploy": "npm run build",
-    "deploy-gh-pages": "npm run build; gh-pages -d build"
+    "deploy-gh-pages": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
