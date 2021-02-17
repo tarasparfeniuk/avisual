@@ -17,7 +17,7 @@ jobs:
         run: npm run build
 
       - name: Deploy
-        run: |
-          git config --global user.email "taras.parfeniuk@gmail.com"
-          git config --global user.name "taras.parfeniuk"
-          npm run deploy-gh-pages
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: gh-pages
+          folder: build
