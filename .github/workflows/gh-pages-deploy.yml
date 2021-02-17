@@ -17,4 +17,4 @@ jobs:
         run: npm run build
 
       - name: Deploy
-        run: gh-pages -d build
+        run: npm run deploy-gh-pages
