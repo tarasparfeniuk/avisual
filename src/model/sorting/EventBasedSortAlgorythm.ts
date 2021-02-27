@@ -1,10 +1,12 @@
+import { EventEmitter } from "events";
 import { AlgorythmInfo } from "../AlgorythmInfo";
-import { AlgorythmStepEventStore } from "../AlgorythmStepEventStore";
 import { ISortAlgorythm } from "./ISortAlgorythm";
+
+const STEP_INITIATED_EVENT = "STEP_INITIATED_EVENT";
 
 export abstract class EventBasedSortAlgorythm<T> implements ISortAlgorythm<T> {
 
-    private readonly _stepEventStore: AlgorythmStepEventStore;
+    private readonly _eventEmitter: EventEmitter;
     private readonly _info: AlgorythmInfo;
 
     private _isFinished: boolean;
@@ -18,7 +20,7 @@ export abstract class EventBasedSortAlgorythm<T> implements ISortAlgorythm<T> {
 
         this._array = [...array];
         this._compare = compare;
-        this._stepEventStore = new AlgorythmStepEventStore();
+        this._eventEmitter = new EventEmitter();
         this._isFinished = false;
         this._operationNumber = 0;
         this._selection = [];
@@ -59,7 +61,7 @@ export abstract class EventBasedSortAlgorythm<T> implements ISortAlgorythm<T> {
 
     public executeStep(): void {
         
-        this._stepEventStore.dispatchStepEvent();
+        this._eventEmitter.emit(STEP_INITIATED_EVENT);
         this._operationNumber++;
     }
 
@@ -72,7 +74,7 @@ export abstract class EventBasedSortAlgorythm<T> implements ISortAlgorythm<T> {
 
         const promise = new Promise<void>((resolve, reject) => {
 
-            this._stepEventStore.onNextStep(() => resolve());
+            this._eventEmitter.once(STEP_INITIATED_EVENT, () => resolve());
         });
 
         return promise;
