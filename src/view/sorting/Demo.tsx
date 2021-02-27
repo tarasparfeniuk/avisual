@@ -1,76 +1,98 @@
 import { CommandBar, CommandBarButton, ICommandBarItemProps, Slider } from "@fluentui/react";
 import React from "react";
-import { BubbleSortAlgorythmFactory } from "../../model/sorting/bubble/BubbleSortAlgorythmFactory";
+import { SortingDemoModel } from "../../model/sorting/SortingDemoModel";
 import { ISortAlgorythm, ISortAlgorythmFactory } from "../../model/sorting/ISortAlgorythm";
-import { MergeSortAlgorythmFactory } from "../../model/sorting/merge/MergeSortAlgorythmFactory";
-import { QuickSortAlgorythmFactory } from "../../model/sorting/quick/QuickSortAlgorythmFactory";
 import { AlgorythmView } from "./Algorythm";
 import { ArraySettings } from "./ArraySettings";
 import './Demo.css';
+import * as config from "../../config/sorting";
 
-type DemoState = "PLAYING" | "PAUSED" | "STOPPED";
-
-const STEP_INTERVAL = 500;
-const DEFAULT_ARRAY_SIZE = 10;
-const DEFAULT_DEMO_SPEED = 10;
+type SortingDemoViewProps = {
+    model: SortingDemoModel
+}
 
 type SortingDemoViewState = {
-    demoState?: DemoState,
-    sourceArray?: number[],
+    canPlay?: boolean,
+    canPause?: boolean,
+    canStop?: boolean,
+    canAddAlgorythm?: boolean, 
+    demoSpeed?: number,
     algorythms?: ISortAlgorythm<number>[]
 }
 
-export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
+export class SortingDemoView extends React.Component<SortingDemoViewProps, SortingDemoViewState> {
 
-    private readonly _availableAlgorythms: ISortAlgorythmFactory<number>[];
-
-    private _stepTimerId: any;
-
-    constructor(props: {}) {
+    constructor(props: SortingDemoViewProps) {
 
         super(props);
 
+        const model = props.model;
+
         this.state = {
-            demoState: "STOPPED",
-            algorythms: [],
-            sourceArray: []
+            algorythms: model.algorythms,
+            canPlay: model.canPlay,
+            canPause: model.canPause,
+            canStop: model.canStop,
+            canAddAlgorythm: model.canAddAlgorythm,
+            demoSpeed: model.demoSpeed
         };
 
         this.addAlgorythm = this.addAlgorythm.bind(this);
-        this.executeStep = this.executeStep.bind(this);
+        this.removeAlgorythm = this.removeAlgorythm.bind(this);
+        this.changeDemoSpeed = this.changeDemoSpeed.bind(this);
         this.pause = this.pause.bind(this);
         this.play = this.play.bind(this);
         this.stop = this.stop.bind(this);
-        this.removeAlgorythm = this.removeAlgorythm.bind(this);
-        this.updateSourceArray = this.updateSourceArray.bind(this);
-        this.changeDemoSpeed = this.changeDemoSpeed.bind(this);
-
-        this._availableAlgorythms = [
-            new BubbleSortAlgorythmFactory((a, b) => a - b),
-            new MergeSortAlgorythmFactory((a, b) => a - b),
-            new QuickSortAlgorythmFactory((a, b) => a - b)
-        ];
     }
 
     componentDidMount() {
 
-        this._stepTimerId = setInterval(this.executeStep, STEP_INTERVAL / DEFAULT_DEMO_SPEED);
-    }
+        const { model } = this.props;
 
-    componentWillUnmount() {
+        model.onStepExecuted(() => { 
+            
+            const stateUpdate: SortingDemoViewState = {
+                algorythms: model.algorythms,
+                canPlay: model.canPlay,
+                canPause: model.canPause,
+                canStop: model.canStop,
+                canAddAlgorythm: model.canAddAlgorythm
+            }
+    
+            this.setState(stateUpdate);
+        });
 
-        clearInterval(this._stepTimerId);
+        model.onInputUpdated(() => {
+
+            const stateUpdate: SortingDemoViewState = {
+                algorythms: model.algorythms,
+                canPlay: model.canPlay,
+                canPause: model.canPause,
+                canStop: model.canStop,
+                canAddAlgorythm: model.canAddAlgorythm
+            };
+
+            this.setState(stateUpdate);
+        });
     }
 
     render() {
 
-        const { demoState, algorythms = [], sourceArray = [] } = this.state;
+        const { model } = this.props;
+        const { 
+            demoSpeed, 
+            canAddAlgorythm, 
+            canPlay, 
+            canStop, 
+            canPause, 
+            algorythms = [],
+        } = this.state;
 
         const addAlgorythmMenuProps = {
-            items: this._availableAlgorythms.map(i => ({
+            items: model.availableAlgorythms.map(i => ({
                 key: `add-algo_${i.algorythmName}`,
                 text: i.algorythmName,
-                onClick: () => this.addAlgorythm(i.create(sourceArray))
+                onClick: () => this.addAlgorythm(i)
             }))
         };
 
@@ -78,23 +100,23 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
             {
                 key: 'playDemo',
                 iconProps: { iconName: 'Play' },
-                disabled: demoState === "PLAYING" || algorythms.length === 0,
+                disabled: !canPlay,
                 iconOnly: true,
-                onClick: this.play
+                onClick: this.play.bind(model)
             },
             {
                 key: 'pauseDemo',
                 iconProps: { iconName: 'Pause' },
-                disabled: demoState === "PAUSED" || demoState === "STOPPED",
+                disabled: !canPause,
                 iconOnly: true,
-                onClick: this.pause
+                onClick: this.pause.bind(model)
             },
             {
                 key: 'stopDemo',
                 iconProps: { iconName: 'Stop' },
-                disabled: demoState === "STOPPED",
+                disabled: !canStop,
                 iconOnly: true,
-                onClick: this.stop
+                onClick: this.stop.bind(model)
             }
         ];
 
@@ -103,28 +125,28 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
                 <div className='demo-settings-toolbar'>
                     <CommandBarButton text='Add algorythm'
                         iconProps={{ iconName: 'Add' }}
-                        disabled={demoState === "PLAYING" || demoState === "PAUSED"}
+                        disabled={!canAddAlgorythm}
                         menuProps={addAlgorythmMenuProps} />
                     <CommandBar items={demoControls} />
                     <Slider 
                         showValue 
                         label='Demo speed' 
-                        min={1} 
-                        max={100} 
-                        defaultValue={DEFAULT_DEMO_SPEED} 
+                        min={config.demo.minSpeed} 
+                        max={config.demo.maxSpeed} 
+                        defaultValue={model.demoSpeed} 
                         onChange={this.changeDemoSpeed}
+                        value={demoSpeed}
                     />
                 </div>
                 <ArraySettings
-                    enabled={this.canUpdateSourceArray}
-                    defaultArraySize={DEFAULT_ARRAY_SIZE}
-                    updateArray={this.updateSourceArray}
+                    enabled={model.canUpdateArray}
+                    model={model.input}
                 />
                 <div className='algorythms-container'>
                 {
                     algorythms.map((i, idx) => {
                         
-                        const isRunning = demoState === "PLAYING" && !i.isFinished;
+                        const isRunning = model.isPlaying && !i.isFinished;
 
                         return (
                             <AlgorythmView
@@ -145,59 +167,31 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
         );
     }
 
-    private get canUpdateSourceArray(): boolean {
+    private changeDemoSpeed(newSpeed: number): void {
 
-        return this.state.demoState === "STOPPED";
-    }
+        const { model } = this.props;
 
-    private play(): void {
-
-        const { demoState, sourceArray = [], algorythms = [] } = this.state;
-
-        if (demoState === "PAUSED") {
-
-            this.setState({ demoState: "PLAYING" })
-        }
-
-        if (demoState === "STOPPED") {
-
-            const stateUpdate: SortingDemoViewState = { 
-                demoState: "PLAYING",
-                algorythms: algorythms.map(i => i.copyWithArray(sourceArray)),
-            };
-
-            this.setState(stateUpdate)
-        }
-    }
-
-    private pause(): void {
-
-        if (this.state.demoState === "PLAYING") {
-
-            this.setState({ demoState: "PAUSED" })
-        }
-    }
-
-    private stop(): void {
-
-        const { demoState } = this.state;
-
-        if (demoState === "PLAYING" || demoState === "PAUSED") {
-
-            const stateUpdate: SortingDemoViewState = {
-                demoState: "STOPPED"
-            };
-
-            this.setState(stateUpdate);
-        }
-    }
-
-    private addAlgorythm(algo: ISortAlgorythm<number>): void {
-
-        const { algorythms = [] } = this.state;
+        model.changeDemoSpeed(newSpeed);
 
         const stateUpdate: SortingDemoViewState = {
-            algorythms: algorythms.concat(algo)
+            demoSpeed: model.demoSpeed
+        }
+
+        this.setState(stateUpdate);
+    }
+
+    private addAlgorythm(factory: ISortAlgorythmFactory<number>): void {
+
+        const { model } = this.props;
+
+        model.addAlgorythm(factory);
+
+        const stateUpdate: SortingDemoViewState = {
+            algorythms: model.algorythms,
+            canPlay: model.canPlay,
+            canPause: model.canPause,
+            canStop: model.canStop,
+            canAddAlgorythm: model.canAddAlgorythm
         }
 
         this.setState(stateUpdate);
@@ -205,67 +199,63 @@ export class SortingDemoView extends React.Component<{}, SortingDemoViewState> {
 
     private removeAlgorythm(id: number): void {
 
-        const { algorythms = [] } = this.state;
-        
-        algorythms.splice(id, 1);
+        const { model } = this.props;
+
+        model.removeAlgorythm(id);
         
         const stateUpdate: SortingDemoViewState = {
-            algorythms
-        }
-
-        if (algorythms.length === 0) {
-            stateUpdate.demoState = "STOPPED";
+            algorythms: model.algorythms
         }
 
         this.setState(stateUpdate);
     }
 
-    private updateSourceArray(newArray: number[]) {
-
-        if (this.canUpdateSourceArray) {
-            
-            const { algorythms = [] } = this.state;
-
-            const stateUpdate: SortingDemoViewState = {
-                sourceArray: newArray,
-                algorythms: algorythms.map(i => i.copyWithArray(newArray))
-            }
     
-            this.setState(stateUpdate);
+    private play(): void {
+
+        const { model } = this.props;
+
+        model.play();
+        
+        const stateUpdate: SortingDemoViewState = {
+            canPlay: model.canPlay,
+            canPause: model.canPause,
+            canStop: model.canStop,
+            canAddAlgorythm: model.canAddAlgorythm
         }
+
+        this.setState(stateUpdate);
     }
 
-    private changeDemoSpeed(newSpeed: number): void {
+    private pause(): void {
 
-        clearInterval(this._stepTimerId);
+        const { model } = this.props;
 
-        this._stepTimerId = setInterval(this.executeStep, STEP_INTERVAL / newSpeed);
+        model.pause();
+        
+        const stateUpdate: SortingDemoViewState = {
+            canPlay: model.canPlay,
+            canPause: model.canPause,
+            canStop: model.canStop,
+            canAddAlgorythm: model.canAddAlgorythm
+        }
+
+        this.setState(stateUpdate);
     }
 
-    private executeStep(): void {
+    private stop(): void {
 
-        if (this.state.demoState === "PLAYING") {
+        const { model } = this.props;
 
-            const { algorythms = [] } = this.state;
-
-            const unfinished = algorythms.filter(a => !a.isFinished);
-
-            if (unfinished.length === 0) {
-
-                this.stop();
-
-                return;
-            }
-
-            unfinished.forEach((algo: ISortAlgorythm<number>) => {
-
-                if (!algo.isFinished) {
-
-                    algo.executeStep();
-                }
-            });
-
-            this.setState({ algorythms })
+        model.stop();
+        
+        const stateUpdate: SortingDemoViewState = {
+            canPlay: model.canPlay,
+            canPause: model.canPause,
+            canStop: model.canStop,
+            canAddAlgorythm: model.canAddAlgorythm
         }
+
+        this.setState(stateUpdate);
     }
 }

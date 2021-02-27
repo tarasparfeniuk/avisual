@@ -2,11 +2,12 @@ import { CommandBarButton, Slider } from "@fluentui/react";
 import React from "react";
 import './ArraySettings.css';
 import { Array } from "./Array";
- 
+import { array as config } from "../../config/sorting";
+import { ISortingInput } from "../../model/sorting/SortingInput";
+
 type ArraySettingsProps = { 
-    enabled: boolean,
-    defaultArraySize: number, 
-    updateArray: (newArray: number[]) => void 
+    model: ISortingInput,
+    enabled: boolean
 };
 
 type ArraySettingsState = { 
@@ -20,20 +21,22 @@ export class ArraySettings extends React.Component<ArraySettingsProps, ArraySett
 
         super(props);
 
+        const { model } = props;
+
         this.updateArray = this.updateArray.bind(this);
         this.regenerateArray = this.regenerateArray.bind(this);
 
-        this.state = { 
-            arraySize: props.defaultArraySize, 
-            array: this.createArray(props.defaultArraySize) 
-        };
+        model.setRandomArray();
 
-        props.updateArray(this.state.array);
+        this.state = { 
+            arraySize: model.arraySize,
+            array: model.array
+        };
     }
 
     render() {
 
-        const { defaultArraySize = 10, enabled } = this.props;
+        const { enabled, model } = this.props;
         const { array, arraySize } = this.state;
 
         return (
@@ -41,9 +44,9 @@ export class ArraySettings extends React.Component<ArraySettingsProps, ArraySett
                 <Slider 
                     showValue 
                     label='Array size' 
-                    min={2} 
-                    max={250} 
-                    defaultValue={defaultArraySize} 
+                    min={config.minSize} 
+                    max={config.maxSize} 
+                    defaultValue={model.arraySize} 
                     value={arraySize}
                     onChange={this.updateArray}
                     disabled={!enabled}
@@ -58,42 +61,31 @@ export class ArraySettings extends React.Component<ArraySettingsProps, ArraySett
         );
     }
 
-    private createArray(size: number): number[] {
-
-        const array = [];
-
-        for (let i = 0; i < size; i++) {
-
-            const min = -10;
-            const max = 10;
-            const val = Math.floor(Math.random() * (max - min + 1)) + min;
-
-            array.push(val);
-        }
-
-        return array;
-    }
-
     private updateArray(newSize: number): void {
 
-        const { updateArray } = this.props;
+        const { model } = this.props;
 
-        const array = this.createArray(newSize);
+        model.setArraySize(newSize);
+        model.setRandomArray();
 
-        this.setState({ arraySize: newSize, array });
+        const stateUpdate = {
+            arraySize: model.arraySize,
+            array: model.array
+        };
 
-        updateArray(array);
+        this.setState(stateUpdate);
     }
 
     private regenerateArray(): void {
 
-        const { updateArray } = this.props;
-        const { arraySize } = this.state;
+        const { model } = this.props;
 
-        const array = this.createArray(arraySize);
+        model.setRandomArray();
 
-        this.setState({ array });
+        const stateUpdate = {
+            array: model.array
+        };
 
-        updateArray(array);
+        this.setState(stateUpdate);
     }
 }
