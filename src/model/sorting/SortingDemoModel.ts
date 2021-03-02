@@ -6,6 +6,7 @@ import { QuickSortAlgorythmFactory } from "./quick/QuickSortAlgorythmFactory";
 import { ISortingInput, SortingInput, withGuard } from "./SortingInput";
 import { demo as config } from "../../config/sorting";
 import { IDisposible } from "../../common/IDisposible";
+import { InsertionSortAlgorythmFactory } from "./insertion/InsertionSortAlgorythmFactory";
 
 const STEP_EXECUTED_EVENT = "ON_STEP_EXECUTED_EVENT";
 
@@ -31,7 +32,8 @@ export class SortingDemoModel implements IDisposible {
         this._availableAlgorythms = [
             new BubbleSortAlgorythmFactory(this._compareFunc),
             new MergeSortAlgorythmFactory(this._compareFunc),
-            new QuickSortAlgorythmFactory(this._compareFunc)
+            new QuickSortAlgorythmFactory(this._compareFunc),
+            new InsertionSortAlgorythmFactory(this._compareFunc)
         ];
         this._algorythms = [];
         this._state = "STOPPED";
