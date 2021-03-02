@@ -4,7 +4,7 @@ import './App.css';
 import { AppTheme } from './view/AppTheme';
 import { initializeIcons } from '@fluentui/react/lib/Icons';
 import { SortingDemoView } from './view/sorting/Demo';
-import { loadTheme, Pivot, PivotItem } from '@fluentui/react';
+import { loadTheme } from '@fluentui/react';
 import { AppModel } from "./model/AppModel";
 
 export const App = () => {
