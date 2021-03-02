@@ -34,7 +34,7 @@ export class MergeSort<T> extends EventBasedSortAlgorythm<T> implements ISortAlg
             await this.waitForNextStep();
             await this.mergeSort(middle + 1, to);
 
-            this.highlightRange(from, to);
+            this.setSelection([from, to]);
             await this.waitForNextStep();
             await this.merge(from, middle, to);
         }
@@ -47,6 +47,7 @@ export class MergeSort<T> extends EventBasedSortAlgorythm<T> implements ISortAlg
 
         for (let i = from; i <= to; i++) {
 
+            this.setSelection([from, to, i]);
             await this.waitForNextStep();
 
             if (i > middle) {
@@ -70,6 +71,7 @@ export class MergeSort<T> extends EventBasedSortAlgorythm<T> implements ISortAlg
                 
             if (item !== undefined) {
 
+                this.setSelection([from, to, i]);
                 this._array[i] = item;
             }
 
