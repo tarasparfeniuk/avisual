@@ -11,6 +11,11 @@
 .array-settings-toolbar > .array-container {
     height: 4vh; 
     max-width: 40vw;
+    min-width: 5vw;
+}
+
+.array-settings-toolbar > .array-container:hover {
+    background-color: rgb(243, 242, 241);
 }
 
 .array-settings-toolbar > .array-container > .item.item-positive > div:first-child {
@@ -21,3 +26,14 @@
     background-color: var(--theme-primary);
 }
 
+.array-settings-toolbar.disabled > .array-container:hover {
+    background-color: transparent;
+}
+
+.array-settings-toolbar.disabled > .array-container > .item.item-positive > div:first-child {
+    background-color: var(--neutral-light);
+}
+
+.array-settings-toolbar.disabled > .array-container > .item.item-negative > div:last-child {
+    background-color: var(--neutral-light);
+}

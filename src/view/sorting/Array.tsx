@@ -2,9 +2,13 @@ import React from "react";
 import { ArrayItem } from "./ArrayItem";
 import './Array.css'
 
-type ArrayProps = { array: number[], selection: number[] };
+type ArrayProps = { 
+    array: number[], 
+    selection: number[],
+    onClick?: () => void
+};
 
-export const Array = ({ array = [], selection = [] }: ArrayProps) => {
+export const Array = ({ array = [], selection = [], onClick }: ArrayProps) => {
 
     const max = Math.max(...array);
     const min = Math.min(...array);
@@ -12,7 +16,7 @@ export const Array = ({ array = [], selection = [] }: ArrayProps) => {
     const maxHeight = Math.max(Math.abs(max), Math.abs(min));
 
     return (
-        <div className='array-container'>
+        <div className='array-container' onClick={onClick}>
             {
                 array.map((item, idx) => {
                     

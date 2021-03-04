@@ -1,0 +1,37 @@
+.array-editor {
+    width: 40vw;
+    padding: 3vh 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.array-editor > .elements-input {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.array-editor > .elements-input > .ms-TextField{
+    width: 80%;
+}
+
+.array-editor > .ms-Slider {
+    width: 80%;
+}
+
+.array-editor > .array-container {
+    height: 30vh;
+    width: 80%;
+}
+
+.array-editor > .array-container > .item.item-positive > div:first-child {
+    background-color: var(--theme-primary);
+}
+
+.array-editor > .array-container > .item.item-negative > div:last-child {
+    background-color: var(--theme-primary);
+}
+

@@ -13,6 +13,8 @@ export interface ISortingInput {
     setArraySize(size: number): void;
     
     setRandomArray(): void;
+
+    setArray(array: number[]): void;
 }
 
 export class SortingInput implements ISortingInput, IDisposible {
@@ -40,7 +42,7 @@ export class SortingInput implements ISortingInput, IDisposible {
 
     public setArraySize(size: number): void {
 
-        if (size < config.minSize || size > config.maxSize) {
+        if (size <= config.minSize || size >= config.maxSize) {
 
             return;
         }
@@ -53,6 +55,17 @@ export class SortingInput implements ISortingInput, IDisposible {
     public setRandomArray(): void {
 
         this._array = this.createArray(this._arraySize, config.minElement, config.maxElement);
+
+        this._eventEmitter.emit(SORTING_INPUT_UPDATED_EVENT);
+    }
+
+    public setArray(array: number[]): void {
+
+        if (array.length >= config.minSize && array.length <= config.maxSize) {
+
+            this._array = array.map(this.trimElement);
+            this._arraySize = this._array.length;
+        } 
 
         this._eventEmitter.emit(SORTING_INPUT_UPDATED_EVENT);
     }
@@ -76,6 +89,21 @@ export class SortingInput implements ISortingInput, IDisposible {
         return array;
     }
 
+    private trimElement(el: number): number {
+
+        if (el > config.maxElement) {
+
+            return config.maxElement;
+        }
+
+        if (el < config.minElement) {
+
+            return config.minElement;
+        }
+
+        return el;
+    }
+
     public dispose(): void {
 
         this._eventEmitter.clear();
@@ -87,6 +115,7 @@ export function withGuard(canUpdateInput: () => boolean, model: ISortingInput): 
     return {
         get array(): number[] { return model.array; },
         get arraySize(): number { return model.arraySize; },
+        setArray: (...args) => { if (canUpdateInput()) { model.setArray.bind(model)(...args) }},
         setArraySize: (...args) => { if (canUpdateInput()) { model.setArraySize.bind(model)(...args) } },
         setRandomArray: (...args) => { if (canUpdateInput()) { model.setRandomArray.bind(model)(...args) } }
     };
