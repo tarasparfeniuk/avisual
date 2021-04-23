@@ -1,0 +1,15 @@
+.field {
+    border: solid black 5px;
+    display: flex;
+}
+
+.field > .row > .cell {
+    width: 5px; 
+    height: 5px;
+    background-color: black;
+    transition: background-color 2s
+}
+
+.field > .row > .cell.passable {
+    background-color: white;
+}

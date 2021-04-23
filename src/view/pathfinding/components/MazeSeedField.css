@@ -1,0 +1,12 @@
+.maze-seed-field-set {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-right: 30px;
+
+}
+
+.maze-seed-field-set > .ms-Checkbox {
+    /* margin-left: 10px; */
+    margin-top: 10px;
+}

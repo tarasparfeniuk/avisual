@@ -1,0 +1,48 @@
+.field-settings-toolbar {
+    width: 94vw;
+    padding: 3vh 24px;
+    display: flex;
+}
+
+.field-settings-toolbar > .col {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.field-settings-toolbar > .col > .row {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+    margin-right: 30px;
+    height: 25px;
+}
+
+.field-settings-toolbar .ms-Slider {
+    width: 250px;
+}
+
+.field-container {
+    padding: 15px;
+    margin-right: 10px;
+    border: solid 2px;
+    border-color: transparent;
+}
+
+.field-container:hover {
+   background: var(--neutral-lighter);
+}
+
+.field-container:active {
+    background: var(--neutral-light);
+}
+
+.field-settings-toolbar .field {
+    border-width: 2px;
+    height: 100px;
+}
+
+.field-settings-toolbar .field > .row > .cell {
+    width: 2px;
+    height: 2px;
+}
