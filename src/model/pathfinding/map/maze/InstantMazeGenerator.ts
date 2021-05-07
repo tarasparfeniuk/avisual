@@ -1,8 +1,7 @@
-import { BlankMapCell } from "../cells/BlankMapCell";
 import { Field } from "../../map/Field";
-import { WallMapCell } from "../../map/cells/WallMapCell";
 import { MazeGeneratorBase } from "./MazeGeneratorBase";
 import { IMazeGenerator } from "./IMazeGenerator";
+import { IMapCell } from "../cells/IMapCell";
 
 export class InstantMazeGenerator extends MazeGeneratorBase implements IMazeGenerator {
 
@@ -36,7 +35,7 @@ export class InstantMazeGenerator extends MazeGeneratorBase implements IMazeGene
 
             for (let y = 0; y < this._field.height; y++) {
 
-                this._field.setCell(x, y, this.getNextState(x, y));
+                this.setNextState(x, y);
             }
         }
     }
@@ -49,16 +48,18 @@ export class InstantMazeGenerator extends MazeGeneratorBase implements IMazeGene
 
                 const rand = this._random.next();
 
-                if (Math.floor(rand * density) === 1) {
-
-                    this._field.setCell(x, y, new BlankMapCell());
-                } else {
-
-                    this._field.setCell(x, y, new WallMapCell());
-                }
+                if (Math.floor(rand * density) === 1) this._field.setBlankCell(x, y);
+                else this._field.setWall(x, y);
             }
         }
     }
 
+    protected async waitForNextStep(): Promise<void> {
+
+        return new Promise<void>((resolve, reject) => {});
+    }
+
     dispose() { }
 }
+
+type Area = { from: IMapCell, to: IMapCell };

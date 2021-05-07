@@ -89,7 +89,7 @@ export class StepByStepMazeGenerator extends MazeGeneratorBase implements IMazeG
 
             for (let y = 0; y < this._field.height; y++) {
 
-                this._field.setCell(x, y, this.getNextState(x, y));
+                this.setNextState(x, y);
             }
         }
     }
@@ -104,13 +104,8 @@ export class StepByStepMazeGenerator extends MazeGeneratorBase implements IMazeG
 
                 const rand = this._random.next();
                 
-                if (Math.floor(rand * density) === 1) {
-
-                    this._field.setCell(x, y, new BlankMapCell());
-                } else {
-
-                    this._field.setCell(x, y, new WallMapCell());
-                }
+                if (Math.floor(rand * density) === 1) this._field.setBlankCell(x, y);
+                else this._field.setWall(x, y);
             }
         }
     }

@@ -1,7 +1,8 @@
 import { IMapCell } from "./IMapCell";
+import { MapCellBase } from "./MapCellBase";
 
 
-export class DestinationPointMapCell implements IMapCell {
+export class DestinationPointMapCell extends MapCellBase implements IMapCell {
 
     static readonly type: string = "destination-point";
 

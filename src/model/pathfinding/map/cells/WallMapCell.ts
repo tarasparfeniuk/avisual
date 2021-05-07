@@ -1,6 +1,7 @@
 import { IMapCell } from "./IMapCell";
+import { MapCellBase } from "./MapCellBase";
 
-export class WallMapCell implements IMapCell {
+export class WallMapCell extends MapCellBase implements IMapCell {
 
     public static readonly type = "wall";
 

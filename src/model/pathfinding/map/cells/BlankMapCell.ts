@@ -1,6 +1,7 @@
 import { IMapCell } from "./IMapCell";
+import { MapCellBase } from "./MapCellBase";
 
-export class BlankMapCell implements IMapCell {
+export class BlankMapCell extends MapCellBase implements IMapCell {
 
     static readonly type: string = "blank";
 

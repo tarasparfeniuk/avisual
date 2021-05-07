@@ -1,12 +1,18 @@
 import { EventEmitter } from "../../../common/EventEmitter";
 import { BlankMapCell } from "./cells/BlankMapCell";
+import { DestinationPointMapCell } from "./cells/DestinationPointMapCell";
+import { EntryPointMapCell } from "./cells/EntryPointMapCell";
 import { IMapCell } from "./cells/IMapCell";
+import { WallMapCell } from "./cells/WallMapCell";
 
 export class Field {
 
     private readonly _height: number;
     private readonly _width: number;
     private readonly _cells: IMapCell[][];
+    
+    private _entry?: EntryPointMapCell; 
+    private _destination?: DestinationPointMapCell; 
 
     constructor(height: number, width: number) {
 
@@ -21,7 +27,7 @@ export class Field {
 
             for (let row = 0; row < height; row++) {
 
-                this._cells[col][row] = new BlankMapCell();
+                this._cells[col][row] = new BlankMapCell(col, row);
             }
         }
     }
@@ -36,13 +42,54 @@ export class Field {
         return this._width;
     }
 
-    setCell(x: number, y: number, cell: IMapCell) {
+    public setEntrypoint(x: number, y: number): void {
 
-        this._cells[x][y] = cell;
+        if (!!this._entry) {
+
+            this.setBlankCell(this._entry.x, this._entry.y);
+        }
+        
+        const entry = new EntryPointMapCell(x, y);
+        
+        this.setCell(x, y, entry);
+        this._entry = entry;
     }
     
-    getCell(x: number, y: number): IMapCell {
+    public setDestinationPoint(x: number, y: number): void {
+
+        if (!!this._destination) {
+
+            this.setBlankCell(this._destination.x, this._destination.y);
+        }
+
+        const dest = new DestinationPointMapCell(x, y);
+        
+        this.setCell(x, y, dest);
+        this._destination = dest;
+    }
+
+    public setWall(x: number, y: number) {
+
+        this.setCell(x, y, new WallMapCell(x, y));
+    }
+    
+    public setBlankCell(x: number, y: number) {
+
+        this.setCell(x, y, new BlankMapCell(x, y));
+    }
+    
+    public getCell(x: number, y: number): IMapCell {
 
         return this._cells[x][y];
+    }
+
+    public getEntrypoint(): EntryPointMapCell | undefined {
+
+        return this._entry;
+    }
+
+    private setCell(x: number, y: number, cell: IMapCell) {
+
+        this._cells[x][y] = cell;
     }
 }

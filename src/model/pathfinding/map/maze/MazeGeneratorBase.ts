@@ -31,17 +31,18 @@ export abstract class MazeGeneratorBase implements IMazeGenerator {
 
     abstract generate(): Promise<Field>;
 
-    protected getNextState(x: number, y: number) {
+    protected setNextState(x: number, y: number): void {
 
         const neighbors = this.getNeighbors(x, y);
         const passibleNeighbors = neighbors.filter(c => c.isPassable);
 
         if (passibleNeighbors.length > 1 && passibleNeighbors.length < 4) {
 
-            return new BlankMapCell();
-        }
+            this._field.setBlankCell(x, y);
+        } else {
 
-        return new WallMapCell();
+            this._field.setWall(x, y);
+        }
     }
 
     protected getNeighbors(x: number, y: number): IMapCell[] {
