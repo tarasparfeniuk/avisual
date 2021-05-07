@@ -32,13 +32,16 @@
 .field-editor .field .cell {
     height: 6px;
     width: 6px;
+}
+
+.field-editor.point-selection .field .cell.cell.passable {
     transition: background-color 0s;
 }
 
-.field-editor.entry-point-selection .field .cell.passable:hover {
+.field-editor.point-selection .field .cell.passable:hover {
     background: #5297fe;
 }
 
-.field-editor .field .cell.passable:hover {
+.field-editor.point-selection .field .cell.passable:hover {
     background: #8ddf94;
 }

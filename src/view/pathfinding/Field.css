@@ -13,3 +13,11 @@
 .field > .row > .cell.passable {
     background-color: white;
 }
+
+.field > .row > .cell.entry-point {
+    background-color: #5297fe;
+}
+
+.field > .row > .cell.destination-point {
+    background-color: #8ddf94;
+}

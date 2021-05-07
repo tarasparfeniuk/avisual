@@ -3,6 +3,8 @@ import { Component } from "react";
 import { Field } from '../../model/pathfinding/map/Field';
 import { IMapCell } from '../../model/pathfinding/map/cells/IMapCell';
 import "./Field.css";
+import { EntryPointMapCell } from '../../model/pathfinding/map/cells/EntryPointMapCell';
+import { DestinationPointMapCell } from '../../model/pathfinding/map/cells/DestinationPointMapCell';
 
 type FieldViewProps = {
     value: Field
@@ -61,6 +63,8 @@ const FieldCell = (props: FieldCellProps) => {
     const classNames = ["cell"];
     
     if (props.value.isPassable) classNames.push("passable");
+    if (props.value.type == EntryPointMapCell.type) classNames.push("entry-point");
+    if (props.value.type == DestinationPointMapCell.type) classNames.push("destination-point");
 
     return (
         <div className={classNames.join(" ")}></div>
