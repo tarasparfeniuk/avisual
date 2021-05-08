@@ -21,8 +21,16 @@ export class MazeSeedField extends React.Component<MazeSeedFieldProps, MazeSeedF
 
         this.switchSeedKeeper = this.switchSeedKeeper.bind(this);
         this.setSeedValue = this.setSeedValue.bind(this);
+        this.onInputUpdated = this.onInputUpdated.bind(this);
 
         this.state = { seed: props.model.mazeSeed, keepValue: props.model.keepSeedValue }
+    }
+
+    componentDidMount() {
+
+        const { model } = this.props;
+
+        model.onInputUpdated(this.onInputUpdated);
     }
 
     render() {
@@ -67,6 +75,12 @@ export class MazeSeedField extends React.Component<MazeSeedFieldProps, MazeSeedF
 
         model.switchSeedKeeper(checked ?? false);
         this.setState({ keepValue: model.keepSeedValue });
+    }
 
+    private onInputUpdated(): void {
+
+        const { model } = this.props;
+
+        this.setState({ seed: model.mazeSeed })
     }
 }
