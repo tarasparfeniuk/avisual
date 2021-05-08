@@ -1,10 +1,11 @@
 import { EventEmitter } from "../../common/EventEmitter";
-import { IDisposible } from "../../common/IDisposible";
+import { disposeSymbol, IDisposible } from "../../common/IDisposible";
 import { field as config } from "../../config/pathfinding";
 import { Field } from "./map/Field";
 import { IMazeGenerator } from "./map/maze/IMazeGenerator";
-import { InstantMazeGenerator } from "./map/maze/InstantMazeGenerator";
-import { StepByStepMazeGenerator } from "./map/maze/StepByStepMazeGenerator";
+import { InstantStepController } from "./map/maze/InstantStepController";
+import { MazeGenerator } from "./map/maze/MazeGenerator";
+import { AsyncStepController } from "./map/maze/AsyncStepController";
 
 const PATHFINDING_INPUT_UPDATED_EVENT = "ON_PATHFINDING_INPUT_UPDATED";
 
@@ -44,6 +45,8 @@ export class PathfindingInput implements IPathfindingInput, IDisposible {
         this._eventEmitter = new EventEmitter();
         this._mazeSeed = this.getNextSeed();
         this._mazeGenerator = this.createGenerator(this._mazeSeed);
+
+        this.onStepExecuted = this.onStepExecuted.bind(this);
     }
     
     public setMazeSeed(value: number) {
@@ -129,6 +132,11 @@ export class PathfindingInput implements IPathfindingInput, IDisposible {
         this._eventEmitter.emit(PATHFINDING_INPUT_UPDATED_EVENT);
     }
 
+    public onInputUpdated(handler: () => void): void {
+
+        this._eventEmitter.on(PATHFINDING_INPUT_UPDATED_EVENT, handler);
+    }
+
     private getNextSeed(): number {
 
         return this._keepMazeSeed 
@@ -136,33 +144,34 @@ export class PathfindingInput implements IPathfindingInput, IDisposible {
             : Math.floor(Math.random() * config.maxMazeSeed);
     }
 
+    private onStepExecuted(field: Field): void {
+
+        this._field = field;
+        this._eventEmitter.emit(PATHFINDING_INPUT_UPDATED_EVENT);
+    }
+    
     private createGenerator(seed: number): IMazeGenerator {
 
-        return this._enableStepExecution 
-            ? new StepByStepMazeGenerator(
-                seed,
-                config.height, 
-                config.width, 
-                this._initialDensity, 
-                this._generationsCount,
-                (field: Field) => {
-                    this._field = field;
-                    this._eventEmitter.emit(PATHFINDING_INPUT_UPDATED_EVENT);
-                }
-            ) 
-            : new InstantMazeGenerator(
-                seed,
-                config.height, 
-                config.width, 
-                this._initialDensity, 
-                this._generationsCount
-            );
-    }
-    public onInputUpdated(handler: () => void): void {
+        const stepController = this._enableStepExecution 
+            ? new AsyncStepController(1)
+            : new InstantStepController();
 
-        this._eventEmitter.on(PATHFINDING_INPUT_UPDATED_EVENT, handler);
+        return new MazeGenerator(
+            seed,
+            config.height, 
+            config.width, 
+            this._initialDensity, 
+            this._generationsCount,
+            this.onStepExecuted,
+            stepController
+        );
     }
-
+    
+    public [disposeSymbol](): void {
+        
+        this.dispose();
+    }
+    
     public dispose(): void {
 
         this._eventEmitter.clear();

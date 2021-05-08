@@ -5,7 +5,7 @@ import { MergeSortAlgorythmFactory } from "./merge/MergeSortAlgorythmFactory";
 import { QuickSortAlgorythmFactory } from "./quick/QuickSortAlgorythmFactory";
 import { ISortingInput, SortingInput, withGuard } from "./SortingInput";
 import { demo as config } from "../../config/sorting";
-import { IDisposible } from "../../common/IDisposible";
+import { disposeSymbol, IDisposible } from "../../common/IDisposible";
 import { InsertionSortAlgorythmFactory } from "./insertion/InsertionSortAlgorythmFactory";
 import { SelectionSortAlgorythmFactory } from "./selection/SelectionSortAlgorythmFactory";
 
@@ -45,6 +45,11 @@ export class SortingDemoModel implements IDisposible {
         this.executeStep = this.executeStep.bind(this);
 
         this._stepTimerId = setInterval(this.executeStep, config.stepInterval / this._demoSpeed);
+    }
+    
+    [disposeSymbol](): void {
+       
+        this.dispose();
     }
 
     public get input(): ISortingInput {

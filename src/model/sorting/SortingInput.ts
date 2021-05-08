@@ -1,5 +1,5 @@
 import { EventEmitter } from "../../common/EventEmitter";
-import { IDisposible } from "../../common/IDisposible";
+import { disposeSymbol, IDisposible } from "../../common/IDisposible";
 import { array as config } from "../../config/sorting";
 
 const SORTING_INPUT_UPDATED_EVENT = "ON_SORTING_INPUT_UPDATED";
@@ -28,6 +28,11 @@ export class SortingInput implements ISortingInput, IDisposible {
 
         this._eventEmitter = new EventEmitter();
         this.setRandomArray();
+    }
+
+    [disposeSymbol](): void {
+        
+        this.dispose();
     }
 
     public get array(): number[] {

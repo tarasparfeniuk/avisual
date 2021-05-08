@@ -1,6 +1,6 @@
 import { EventEmitter } from "../../common/EventEmitter";
 import { demo as config } from "../../config/sorting";
-import { IDisposible } from "../../common/IDisposible";
+import { disposeSymbol, IDisposible } from "../../common/IDisposible";
 import { IPathfindingAlgorythmFactory, IPathfindingAlgorythm } from "./IPathfindingAlgorythm";
 import { PathfindingInput, IPathfindingInput } from "./PathfindingInput";
 
@@ -33,6 +33,11 @@ export class PathfindingDemoModel implements IDisposible {
         this.executeStep = this.executeStep.bind(this);
 
         this._stepTimerId = setInterval(this.executeStep, config.stepInterval / this._demoSpeed);
+    }
+    
+    [disposeSymbol](): void {
+        
+        this.dispose();
     }
 
     public get input(): IPathfindingInput {
