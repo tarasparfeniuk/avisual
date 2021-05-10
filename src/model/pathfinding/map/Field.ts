@@ -1,4 +1,3 @@
-import { EventEmitter } from "../../../common/EventEmitter";
 import { BlankMapCell } from "./cells/BlankMapCell";
 import { DestinationPointMapCell } from "./cells/DestinationPointMapCell";
 import { EntryPointMapCell } from "./cells/EntryPointMapCell";
@@ -92,4 +91,19 @@ export class Field {
 
         this._cells[x][y] = cell;
     }
+}
+
+export function getFieldArea(field: Field, from: IMapCell, to: IMapCell): Field {
+
+    const area = new Field(to.y - from.y + 1, to.x - from.x + 1);
+    for (let x = from.x; x <= to.x; x++) {
+        
+        for (let y = from.y; y <= to.y; y++) {
+            
+            const cell = field.getCell(x, y);
+            if (cell && !cell.isPassable) area.setWall(x, y);
+        }    
+    }
+
+    return area;
 }

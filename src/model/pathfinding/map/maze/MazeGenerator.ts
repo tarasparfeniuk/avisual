@@ -5,6 +5,7 @@ import { IMazeGenerator } from "./IMazeGenerator";
 import { LinearRandom } from "../../../../common/LinearRandom";
 import { disposeSymbol, IDisposible, instanceOfIDisposible } from "../../../../common/IDisposible";
 import { IStepController } from "./IStepController";
+import { buildGraph, Graph } from "../Graph";
 
 export class MazeGenerator implements IMazeGenerator {
 
@@ -64,6 +65,9 @@ export class MazeGenerator implements IMazeGenerator {
             await this.waitForNextStep();
             await this.setNextGeneration();
         }
+
+        this.setEntryPoint();
+        this.setDestinationPoint();
     }
 
     private async waitForNextStep(): Promise<void> {
@@ -140,6 +144,46 @@ export class MazeGenerator implements IMazeGenerator {
             neighbors.push(this._field.getCell(x, this._field.height - 1));
 
         return neighbors;
+    }
+
+    private setEntryPoint(): void {
+
+        const from = this._field.getCell(0, 0);
+        const to = this._field.getCell(Math.floor(this._field.width / 2), Math.floor(this._field.height / 2));
+        const graph = this.getBiggestSubgraph(from, to);
+        const entry = graph[0];
+
+        this._field.setEntrypoint(entry.x, entry.y);
+    }
+
+    private setDestinationPoint(): void {
+
+        const from = this._field.getCell(Math.floor(this._field.width / 2), Math.floor(this._field.height / 2));
+        const to = this._field.getCell(this._field.width - 1, this._field.height - 1)
+        const graph = this.getBiggestSubgraph(from, to);
+        const dest = graph[0];
+
+        this._field.setDestinationPoint(dest.x, dest.y);
+    }
+
+    private getBiggestSubgraph(from: IMapCell, to: IMapCell): Graph {
+
+        const graphs = [];
+
+        for (let x = from.x; x <= to.x; x++) {
+        
+            for (let y = from.y; y <= to.y; y++) {
+                
+                const graph = buildGraph(this._field, this._field.getCell(x, y), from, to);
+
+                if (graph.length > 30) return graph;
+                if (graph.length > 10) graphs.push(graph);
+            }    
+        }
+    
+        graphs.sort((a, b) => b.length - a.length);
+
+        return graphs[0];
     }
 
     public [disposeSymbol](): void {
