@@ -8,15 +8,15 @@ import { IStepController } from "./IStepController";
 
 export class MazeGenerator implements IMazeGenerator {
 
-    protected readonly _density: number;
-    protected readonly _generations: number;
-    protected readonly _height: number;
-    protected readonly _width: number;
-    protected readonly _random: IRandom;
+    private readonly _density: number;
+    private readonly _generations: number;
+    private readonly _height: number;
+    private readonly _width: number;
+    private readonly _random: IRandom;
     private readonly _stepController: IStepController;
     
     private _isFinished: boolean = false;
-    protected _field: Field;
+    private _field: Field;
 
     constructor
     (
