@@ -10,8 +10,6 @@ export class MazeGenerator implements IMazeGenerator {
 
     private readonly _density: number;
     private readonly _generations: number;
-    private readonly _height: number;
-    private readonly _width: number;
     private readonly _random: IRandom;
     private readonly _stepController: IStepController;
     
@@ -29,8 +27,6 @@ export class MazeGenerator implements IMazeGenerator {
         stepController: IStepController
     ) {
 
-        this._width = width;
-        this._height = height;
         this._field = new Field(height, width);
         this._density = density;
         this._generations = generations;
