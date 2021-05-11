@@ -151,7 +151,7 @@ export class MazeGenerator implements IMazeGenerator {
         const from = this._field.getCell(0, 0);
         const to = this._field.getCell(Math.floor(this._field.width / 2), Math.floor(this._field.height / 2));
         const graph = this.getBiggestSubgraph(from, to);
-        const entry = graph[0];
+        const entry = graph.sort((a, b) => a.y - b.y)[0];
 
         this._field.setEntrypoint(entry.x, entry.y);
     }
@@ -161,7 +161,7 @@ export class MazeGenerator implements IMazeGenerator {
         const from = this._field.getCell(Math.floor(this._field.width / 2), Math.floor(this._field.height / 2));
         const to = this._field.getCell(this._field.width - 1, this._field.height - 1)
         const graph = this.getBiggestSubgraph(from, to);
-        const dest = graph[0];
+        const dest = graph.sort((a, b) => b.y - a.y)[0];
 
         this._field.setDestinationPoint(dest.x, dest.y);
     }
